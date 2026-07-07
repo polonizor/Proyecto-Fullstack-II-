@@ -18,6 +18,9 @@ start /b "Medico Service" cmd /k "cd /d "%~dp0medico-service\medico" && .\mvnw.c
 echo --- Paciente service (port 8082) ---
 start /b "Paciente Service" cmd /k "cd /d "%~dp0paciente-service\paciente" && .\mvnw.cmd -DskipTests spring-boot:run -Dserver.port=8082"
 
+echo --- Especialidad service (port 8084) ---
+start /b "Especialidad Service" cmd /k "cd /d "%~dp0especialidad-service\especialidad" && .\mvnw.cmd -DskipTests spring-boot:run -Dserver.port=8084"
+
 echo All services have been started in the current window.
 echo Output from all services will appear interleaved here.
 echo To stop everything, close this terminal or use Ctrl+C and then close the window.
