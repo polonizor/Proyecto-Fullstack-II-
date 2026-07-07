@@ -1,6 +1,6 @@
 @echo off
 rem Batch file to start all microservices using JDK 21.
-rem Services: Auth (8081), Paciente (8082), Medico (8083), Especialidad (8084), Cita (8085), Examen (8086), Producto (8087)
+rem Services: Auth (8081), Paciente (8082), Medico (8083), Especialidad (8084), Cita (8085), Examen (8086), Producto (8087), Inventario (8088), Facturacion (8089), Habitaciones (8090)
 rem Run this file from the repository root: "c:\Proyecto Fullstack II"
 
 set "JAVA_HOME=C:\Program Files\Eclipse Adoptium\jdk-21.0.11.10-hotspot"
@@ -30,6 +30,15 @@ start /b "Examen Service" cmd /k "cd /d "%~dp0examen-service\examen" && .\mvnw.c
 
 echo --- Producto service (port 8087) ---
 start /b "Producto Service" cmd /k "cd /d "%~dp0producto-service\producto" && .\mvnw.cmd -DskipTests spring-boot:run -Dserver.port=8087"
+
+echo --- Inventario service (port 8088) ---
+start /b "Inventario Service" cmd /k "cd /d "%~dp0inventario-service\inventario" && .\mvnw.cmd -DskipTests spring-boot:run -Dserver.port=8088"
+
+echo --- Facturacion service (port 8089) ---
+start /b "Facturacion Service" cmd /k "cd /d "%~dp0facturacion-service\factura" && .\mvnw.cmd -DskipTests spring-boot:run -Dserver.port=8089"
+
+echo --- Habitaciones service (port 8090) ---
+start /b "Habitaciones Service" cmd /k "cd /d "%~dp0habitacion-service\habitaciones" && .\mvnw.cmd -DskipTests spring-boot:run -Dserver.port=8090"
 
 echo.
 echo All services have been started in separate terminal windows.
