@@ -2,6 +2,10 @@ package com.hospitaltech_cl.factura.controller;
 
 import com.hospitaltech_cl.factura.model.Factura;
 import com.hospitaltech_cl.factura.service.FacturaService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,15 +24,15 @@ import java.util.Optional;
 @RequestMapping("/api/facturas")
 @Slf4j
 @CrossOrigin(origins = "*", maxAge = 3600)
+@Tag(name = "Facturas", description = "Gestión de facturas del hospital")
 public class FacturaController {
 
     @Autowired
     private FacturaService facturaService;
 
-    /**
-     * Crear una nueva factura
-     */
     @PostMapping
+    @Operation(summary = "Crear nueva factura", description = "Crea una nueva factura en el sistema")
+    @ApiResponse(responseCode = "201", description = "Factura creada exitosamente")
     public ResponseEntity<Map<String, Object>> crearFactura(@Valid @RequestBody Factura factura) {
         try {
             log.info("Solicitud para crear nueva factura");
@@ -49,10 +53,9 @@ public class FacturaController {
         }
     }
 
-    /**
-     * Obtener factura por ID
-     */
     @GetMapping("/{id}")
+    @Operation(summary = "Obtener factura por ID", description = "Busca una factura específica por su ID")
+    @ApiResponse(responseCode = "200", description = "Factura encontrada")
     public ResponseEntity<Map<String, Object>> obtenerFactura(@PathVariable Long id) {
         try {
             Optional<Factura> factura = facturaService.obtenerFacturaById(id);
@@ -77,10 +80,9 @@ public class FacturaController {
         }
     }
 
-    /**
-     * Obtener factura por número
-     */
     @GetMapping("/numero/{numeroFactura}")
+    @Operation(summary = "Obtener factura por número", description = "Busca una factura por su número de factura")
+    @ApiResponse(responseCode = "200", description = "Factura encontrada")
     public ResponseEntity<Map<String, Object>> obtenerFacturaPorNumero(@PathVariable String numeroFactura) {
         try {
             Optional<Factura> factura = facturaService.obtenerFacturaByNumero(numeroFactura);
@@ -105,10 +107,9 @@ public class FacturaController {
         }
     }
 
-    /**
-     * Obtener todas las facturas
-     */
     @GetMapping
+    @Operation(summary = "Obtener todas las facturas", description = "Retorna la lista completa de facturas")
+    @ApiResponse(responseCode = "200", description = "Lista de facturas obtenida")
     public ResponseEntity<Map<String, Object>> obtenerTodasLasFacturas() {
         try {
             List<Factura> facturas = facturaService.obtenerTodasLasFacturas();
@@ -127,10 +128,9 @@ public class FacturaController {
         }
     }
 
-    /**
-     * Obtener facturas por paciente
-     */
     @GetMapping("/paciente/{idPaciente}")
+    @Operation(summary = "Obtener facturas por paciente", description = "Obtiene todas las facturas de un paciente específico")
+    @ApiResponse(responseCode = "200", description = "Facturas obtenidas")
     public ResponseEntity<Map<String, Object>> obtenerFacturasPorPaciente(@PathVariable Long idPaciente) {
         try {
             List<Factura> facturas = facturaService.obtenerFacturasPorPaciente(idPaciente);
@@ -149,10 +149,9 @@ public class FacturaController {
         }
     }
 
-    /**
-     * Obtener facturas por estado
-     */
     @GetMapping("/estado/{estado}")
+    @Operation(summary = "Obtener facturas por estado", description = "Obtiene facturas filtradas por estado (PENDIENTE, PAGADA, ANULADA, PARCIALMENTE_PAGADA)")
+    @ApiResponse(responseCode = "200", description = "Facturas obtenidas")
     public ResponseEntity<Map<String, Object>> obtenerFacturasPorEstado(@PathVariable String estado) {
         try {
             Factura.EstadoFactura estadoEnum = Factura.EstadoFactura.valueOf(estado.toUpperCase());
@@ -178,10 +177,9 @@ public class FacturaController {
         }
     }
 
-    /**
-     * Obtener facturas por rango de fecha
-     */
     @GetMapping("/fechas")
+    @Operation(summary = "Obtener facturas por rango de fecha", description = "Obtiene facturas dentro de un rango de fechas especificado")
+    @ApiResponse(responseCode = "200", description = "Facturas obtenidas")
     public ResponseEntity<Map<String, Object>> obtenerFacturasPorFecha(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
@@ -202,10 +200,9 @@ public class FacturaController {
         }
     }
 
-    /**
-     * Actualizar factura
-     */
     @PutMapping("/{id}")
+    @Operation(summary = "Actualizar factura", description = "Modifica los datos de una factura existente")
+    @ApiResponse(responseCode = "200", description = "Factura actualizada exitosamente")
     public ResponseEntity<Map<String, Object>> actualizarFactura(@PathVariable Long id, @Valid @RequestBody Factura factura) {
         try {
             Factura facturaActualizada = facturaService.actualizarFactura(id, factura);
@@ -230,10 +227,9 @@ public class FacturaController {
         }
     }
 
-    /**
-     * Registrar pago de factura
-     */
     @PostMapping("/{id}/pagar")
+    @Operation(summary = "Registrar pago de factura", description = "Registra un pago para una factura específica")
+    @ApiResponse(responseCode = "200", description = "Pago registrado exitosamente")
     public ResponseEntity<Map<String, Object>> registrarPago(
             @PathVariable Long id,
             @RequestParam Double monto,
@@ -268,10 +264,9 @@ public class FacturaController {
         }
     }
 
-    /**
-     * Anular factura
-     */
     @PostMapping("/{id}/anular")
+    @Operation(summary = "Anular factura", description = "Marca una factura como anulada")
+    @ApiResponse(responseCode = "200", description = "Factura anulada exitosamente")
     public ResponseEntity<Map<String, Object>> anularFactura(
             @PathVariable Long id,
             @RequestParam(required = false, defaultValue = "Solicitud de usuario") String motivo) {
@@ -298,10 +293,9 @@ public class FacturaController {
         }
     }
 
-    /**
-     * Eliminar factura
-     */
     @DeleteMapping("/{id}")
+    @Operation(summary = "Eliminar factura", description = "Borra una factura del sistema")
+    @ApiResponse(responseCode = "200", description = "Factura eliminada correctamente")
     public ResponseEntity<Map<String, Object>> eliminarFactura(@PathVariable Long id) {
         try {
             facturaService.eliminarFactura(id);
@@ -325,10 +319,9 @@ public class FacturaController {
         }
     }
 
-    /**
-     * Obtener estadísticas
-     */
     @GetMapping("/estadisticas/resumen")
+    @Operation(summary = "Obtener estadísticas", description = "Retorna estadísticas de facturas (pendientes, pagadas, anuladas, etc.)")
+    @ApiResponse(responseCode = "200", description = "Estadísticas obtenidas")
     public ResponseEntity<Map<String, Object>> obtenerEstadisticas() {
         try {
             Map<String, Object> estadisticas = new HashMap<>();

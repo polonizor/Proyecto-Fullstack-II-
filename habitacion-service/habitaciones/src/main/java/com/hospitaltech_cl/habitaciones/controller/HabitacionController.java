@@ -2,6 +2,10 @@ package com.hospitaltech_cl.habitaciones.controller;
 
 import com.hospitaltech_cl.habitaciones.model.Habitacion;
 import com.hospitaltech_cl.habitaciones.service.HabitacionService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,15 +22,15 @@ import java.util.Optional;
 @RequestMapping("/api/habitaciones")
 @Slf4j
 @CrossOrigin(origins = "*", maxAge = 3600)
+@Tag(name = "Habitaciones", description = "Gestión de habitaciones del hospital")
 public class HabitacionController {
 
     @Autowired
     private HabitacionService habitacionService;
 
-    /**
-     * Crear nueva habitación
-     */
     @PostMapping
+    @Operation(summary = "Crear nueva habitación", description = "Registra una nueva habitación en el sistema")
+    @ApiResponse(responseCode = "201", description = "Habitación creada exitosamente")
     public ResponseEntity<Map<String, Object>> crearHabitacion(@Valid @RequestBody Habitacion habitacion) {
         try {
             log.info("Solicitud para crear nueva habitación");
@@ -47,10 +51,9 @@ public class HabitacionController {
         }
     }
 
-    /**
-     * Obtener habitación por ID
-     */
     @GetMapping("/{id}")
+    @Operation(summary = "Obtener habitación por ID", description = "Busca una habitación específica por su ID")
+    @ApiResponse(responseCode = "200", description = "Habitación encontrada")
     public ResponseEntity<Map<String, Object>> obtenerHabitacion(@PathVariable Long id) {
         try {
             Optional<Habitacion> habitacion = habitacionService.obtenerHabitacionById(id);
@@ -75,10 +78,9 @@ public class HabitacionController {
         }
     }
 
-    /**
-     * Obtener habitación por número
-     */
     @GetMapping("/numero/{numeroHabitacion}")
+    @Operation(summary = "Obtener habitación por número", description = "Busca una habitación por su número")
+    @ApiResponse(responseCode = "200", description = "Habitación encontrada")
     public ResponseEntity<Map<String, Object>> obtenerHabitacionPorNumero(@PathVariable String numeroHabitacion) {
         try {
             Optional<Habitacion> habitacion = habitacionService.obtenerHabitacionByNumero(numeroHabitacion);
@@ -103,10 +105,9 @@ public class HabitacionController {
         }
     }
 
-    /**
-     * Obtener todas las habitaciones
-     */
     @GetMapping
+    @Operation(summary = "Obtener todas las habitaciones", description = "Retorna la lista completa de habitaciones")
+    @ApiResponse(responseCode = "200", description = "Lista de habitaciones obtenida")
     public ResponseEntity<Map<String, Object>> obtenerTodasLasHabitaciones() {
         try {
             List<Habitacion> habitaciones = habitacionService.obtenerTodasLasHabitaciones();
@@ -125,10 +126,9 @@ public class HabitacionController {
         }
     }
 
-    /**
-     * Obtener habitaciones disponibles
-     */
     @GetMapping("/disponibles")
+    @Operation(summary = "Obtener habitaciones disponibles", description = "Retorna todas las habitaciones disponibles para asignar")
+    @ApiResponse(responseCode = "200", description = "Habitaciones disponibles obtenidas")
     public ResponseEntity<Map<String, Object>> obtenerHabitacionesDisponibles() {
         try {
             List<Habitacion> habitaciones = habitacionService.obtenerHabitacionesDisponibles();
@@ -147,10 +147,9 @@ public class HabitacionController {
         }
     }
 
-    /**
-     * Obtener habitaciones por estado
-     */
     @GetMapping("/estado/{estado}")
+    @Operation(summary = "Obtener habitaciones por estado", description = "Filtra habitaciones por estado (DISPONIBLE, OCUPADA, MANTENIMIENTO)")
+    @ApiResponse(responseCode = "200", description = "Habitaciones filtradas")
     public ResponseEntity<Map<String, Object>> obtenerHabitacionesPorEstado(@PathVariable String estado) {
         try {
             Habitacion.EstadoHabitacion estadoEnum = Habitacion.EstadoHabitacion.valueOf(estado.toUpperCase());
@@ -176,10 +175,9 @@ public class HabitacionController {
         }
     }
 
-    /**
-     * Obtener habitaciones por tipo
-     */
     @GetMapping("/tipo/{tipo}")
+    @Operation(summary = "Obtener habitaciones por tipo", description = "Filtra habitaciones por tipo (INDIVIDUAL, DOBLE, SUITE)")
+    @ApiResponse(responseCode = "200", description = "Habitaciones filtradas")
     public ResponseEntity<Map<String, Object>> obtenerHabitacionesPorTipo(@PathVariable String tipo) {
         try {
             Habitacion.TipoHabitacion tipoEnum = Habitacion.TipoHabitacion.valueOf(tipo.toUpperCase());
@@ -205,10 +203,9 @@ public class HabitacionController {
         }
     }
 
-    /**
-     * Obtener habitaciones por piso
-     */
     @GetMapping("/piso/{piso}")
+    @Operation(summary = "Obtener habitaciones por piso", description = "Filtra habitaciones por número de piso")
+    @ApiResponse(responseCode = "200", description = "Habitaciones filtradas")
     public ResponseEntity<Map<String, Object>> obtenerHabitacionesPorPiso(@PathVariable Integer piso) {
         try {
             List<Habitacion> habitaciones = habitacionService.obtenerHabitacionesPorPiso(piso);
@@ -227,10 +224,9 @@ public class HabitacionController {
         }
     }
 
-    /**
-     * Actualizar habitación
-     */
     @PutMapping("/{id}")
+    @Operation(summary = "Actualizar habitación", description = "Modifica los datos de una habitación existente")
+    @ApiResponse(responseCode = "200", description = "Habitación actualizada")
     public ResponseEntity<Map<String, Object>> actualizarHabitacion(@PathVariable Long id, @Valid @RequestBody Habitacion habitacion) {
         try {
             Habitacion habitacionActualizada = habitacionService.actualizarHabitacion(id, habitacion);
@@ -255,10 +251,9 @@ public class HabitacionController {
         }
     }
 
-    /**
-     * Cambiar estado de habitación
-     */
     @PatchMapping("/{id}/estado")
+    @Operation(summary = "Cambiar estado de habitación", description = "Actualiza el estado de una habitación")
+    @ApiResponse(responseCode = "200", description = "Estado actualizado")
     public ResponseEntity<Map<String, Object>> cambiarEstado(@PathVariable Long id, @RequestParam String estado) {
         try {
             Habitacion.EstadoHabitacion estadoEnum = Habitacion.EstadoHabitacion.valueOf(estado.toUpperCase());
@@ -290,10 +285,9 @@ public class HabitacionController {
         }
     }
 
-    /**
-     * Asignar paciente a habitación
-     */
     @PostMapping("/{id}/asignar-paciente")
+    @Operation(summary = "Asignar paciente a habitación", description = "Vincula un paciente a una habitación")
+    @ApiResponse(responseCode = "200", description = "Paciente asignado")
     public ResponseEntity<Map<String, Object>> asignarPaciente(@PathVariable Long id, @RequestParam Long idPaciente) {
         try {
             Habitacion habitacionActualizada = habitacionService.asignarPaciente(id, idPaciente);
@@ -318,10 +312,9 @@ public class HabitacionController {
         }
     }
 
-    /**
-     * Liberar habitación
-     */
     @PostMapping("/{id}/liberar")
+    @Operation(summary = "Liberar habitación", description = "Marca una habitación como disponible nuevamente")
+    @ApiResponse(responseCode = "200", description = "Habitación liberada")
     public ResponseEntity<Map<String, Object>> liberarHabitacion(@PathVariable Long id) {
         try {
             Habitacion habitacionActualizada = habitacionService.liberarHabitacion(id);
@@ -346,10 +339,9 @@ public class HabitacionController {
         }
     }
 
-    /**
-     * Eliminar habitación
-     */
     @DeleteMapping("/{id}")
+    @Operation(summary = "Eliminar habitación", description = "Borra una habitación del sistema")
+    @ApiResponse(responseCode = "200", description = "Habitación eliminada")
     public ResponseEntity<Map<String, Object>> eliminarHabitacion(@PathVariable Long id) {
         try {
             habitacionService.eliminarHabitacion(id);
@@ -373,10 +365,9 @@ public class HabitacionController {
         }
     }
 
-    /**
-     * Obtener estadísticas de habitaciones
-     */
     @GetMapping("/estadisticas/resumen")
+    @Operation(summary = "Obtener estadísticas de habitaciones", description = "Retorna estadísticas sobre disponibilidad y ocupación")
+    @ApiResponse(responseCode = "200", description = "Estadísticas obtenidas")
     public ResponseEntity<Map<String, Object>> obtenerEstadisticas() {
         try {
             Map<String, Object> estadisticas = new HashMap<>();
@@ -396,10 +387,9 @@ public class HabitacionController {
         }
     }
 
-    /**
-     * Obtener habitaciones de un paciente
-     */
     @GetMapping("/paciente/{idPaciente}")
+    @Operation(summary = "Obtener habitaciones de paciente", description = "Retorna las habitaciones asignadas a un paciente")
+    @ApiResponse(responseCode = "200", description = "Habitaciones obtenidas")
     public ResponseEntity<Map<String, Object>> obtenerHabitacionesPorPaciente(@PathVariable Long idPaciente) {
         try {
             List<Habitacion> habitaciones = habitacionService.obtenerHabitacionesPorPaciente(idPaciente);

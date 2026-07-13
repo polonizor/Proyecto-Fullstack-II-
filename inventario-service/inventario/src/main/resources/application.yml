@@ -2,6 +2,8 @@ server:
   port: 8088
 
 spring:
+  application:
+    name: inventario-service
   datasource:
     url: jdbc:mysql://localhost:3306/inventario_db
     username: root
@@ -11,3 +13,10 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka

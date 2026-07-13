@@ -1,0 +1,103 @@
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+      routes:
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/auth/**
+        
+        - id: paciente-service
+          uri: lb://paciente-service
+          predicates:
+            - Path=/pacientes/**
+        
+        - id: medico-service
+          uri: lb://medico-service
+          predicates:
+            - Path=/medicos/**
+        
+        - id: cita-service
+          uri: lb://cita-service
+          predicates:
+            - Path=/citas/**
+        
+        - id: examen-service
+          uri: lb://examen-service
+          predicates:
+            - Path=/examenes/**
+        
+        - id: facturacion-service
+          uri: lb://factura-service
+          predicates:
+            - Path=/api/facturas/**
+        
+        - id: inventario-service
+          uri: lb://inventario-service
+          predicates:
+            - Path=/inventario/**
+        
+        - id: producto-service
+          uri: lb://producto-service
+          predicates:
+            - Path=/productos/**
+        
+        - id: habitacion-service
+          uri: lb://habitaciones-service
+          predicates:
+            - Path=/api/habitaciones/**
+        
+        - id: especialidad-service
+          uri: lb://especialidad-service
+          predicates:
+            - Path=/especialidades/**
+
+  # Configuración de SpringDoc para agregar Swagger de los microservicios
+  springdoc:
+    swagger-ui:
+      enabled: true
+      path: /swagger-ui.html
+      urls:
+        - name: "Auth Service"
+          url: "http://localhost:8081/v3/api-docs"
+        - name: "Paciente Service"
+          url: "http://localhost:8082/v3/api-docs"
+        - name: "Medico Service"
+          url: "http://localhost:8083/v3/api-docs"
+        - name: "Especialidad Service"
+          url: "http://localhost:8084/v3/api-docs"
+        - name: "Cita Service"
+          url: "http://localhost:8085/v3/api-docs"
+        - name: "Examen Service"
+          url: "http://localhost:8086/v3/api-docs"
+        - name: "Producto Service"
+          url: "http://localhost:8087/v3/api-docs"
+        - name: "Inventario Service"
+          url: "http://localhost:8088/v3/api-docs"
+        - name: "Factura Service"
+          url: "http://localhost:8089/v3/api-docs"
+        - name: "Habitaciones Service"
+          url: "http://localhost:8090/v3/api-docs"
+
+server:
+  port: 8080
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+logging:
+  level:
+    root: INFO
+    org.springframework.cloud.gateway: DEBUG
